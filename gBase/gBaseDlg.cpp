@@ -120,7 +120,7 @@ void CgBaseDlg::OnSysCommand(UINT nID, LPARAM lParam)
 	if ((nID & 0xFFF0) == IDM_ABOUTBOX)
 	{
 		CAboutDlg dlgAbout;
-		dlgAbout.DoModal();
+		dlgAbout.DoModal(); 
 	}
 	else
 	{
@@ -188,20 +188,7 @@ void MakeDirectory(const string &path) {
 
 void CgBaseDlg::OnBnClickedBtnSave()
 {
-	//gTimeTracker::START("11",&m_logger);
-	//int pitch = m_imgDisplay.gGetPitch();
-	//unsigned char* fm = m_imgDisplay.gGetImgPtr();
-	//CRect r = m_imgDisplay.gGetRoi();
-
-	//for (int j = r.top; j < r.bottom; j++) {
-	//	for (int i = r.left; i < r.right; i++) {
-	//		fm[j*pitch + i] = 0xff - fm[j*pitch + i]; // 색 반전
-	//	}
-	//}
-	//gTimeTracker::END("11",&m_logger);
-
-	//m_imgDisplay.UpdateDisplay(); //화면 갱신
-
+	/*
 	CDC* pDC = m_imgDisplay.GetDC();
 	HDC hDC = pDC->m_hDC; 
 
@@ -252,28 +239,29 @@ void CgBaseDlg::OnBnClickedBtnSave()
 	CloseHandle(hFile); 
 
 	delete[] lpBits;
+	*/
 
-
-	m_imgDisplay.gSaveOverlay("C:\\TestImage\\Test.jpg",1,FALSE);
-
-	CRect rectCrop = { 0,0,800,800 };
-	
+	//폴더생성
 	string strFolderPath = "C:\\TestImage\\CropImages";
 	MakeDirectory(strFolderPath);
 
+	//Grid 오버레이 이미지 저장
+	m_imgDisplay.gSaveOverlay("C:\\TestImage\\Test.jpg",1,FALSE);
+
+	//분할 이미지 저장
+	CRect rectCrop;
 	string strCropImageName_first = "\\sample image crop ";
 	string strCropImageName_second = ".jpg";
 
-	string strTimeTest;
 	time_t timeNow;
 	timeNow = time(NULL);
 	strCropImageName_second = fmt::format(" {}-{}-{} {}{}{}.jpg", 
 		(localtime(&timeNow)->tm_year + 1900), (localtime(&timeNow)->tm_mon + 1), (localtime(&timeNow)->tm_mday), 
 		(localtime(&timeNow)->tm_hour), (localtime(&timeNow)->tm_min), (localtime(&timeNow)->tm_sec));
 	
-	int nGridWidth = m_imgDisplay.gGetWidth();
-	int nGridHeight = m_imgDisplay.gGetHeight();
-	int nGridRow = 8;
+	const int nGridWidth = m_imgDisplay.gGetWidth();
+	const int nGridHeight = m_imgDisplay.gGetHeight();
+	const int nGridRow = 8;
 
 	for (int j = 1; j <= nGridRow; j++) {
 		for (int i = 1; i <= nGridRow; i++) {
@@ -286,12 +274,8 @@ void CgBaseDlg::OnBnClickedBtnSave()
 			m_imgDisplay.gSaveCropImage(rectCrop, strFolderPath + strCropImageName_first + to_string(i + (nGridRow*(j - 1))) + strCropImageName_second, FALSE);
 		}
 	}
-	
-
 }
 
-
-#define COLOR_RED	RGB(0xff,0x00,0x00)
 void CgBaseDlg::OnBnClickedBtnDrawGrid()
 {
 	/* 다이얼로그 내에 static image 박스의 크기를 받아왔음

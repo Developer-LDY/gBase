@@ -34,7 +34,7 @@
 #include <afxcontrolbars.h>     // MFC의 리본 및 컨트롤 막대 지원
 
 
-
+#define COLOR_RED	RGB(0xff,0x00,0x00)
 
 
 
